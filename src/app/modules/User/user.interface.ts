@@ -11,6 +11,8 @@ export type TUpdateUser = {
 }
 
 export interface UserModel extends Model<TUser> {
-    // Instance method for checking if the user exist
-    isUserExistsByEmail(id: string): Promise<TUser>
+    // Instance method for checking if the user exist by Id
+    isUserExistsById(id: string): Promise<TUser>
+    // Instance method for checking if the user exist by Email
+    isUserExistsByEmail(email: string): Promise<TUser>
 }

@@ -5,6 +5,8 @@ import { UserControllers } from './user.controller'
 
 const router = express.Router()
 
+router.get('/:userEmail', UserControllers.getUser)
+
 router.post(
     '/register-user',
     validateRequest(UserValidations.registerUserValidationSchema),

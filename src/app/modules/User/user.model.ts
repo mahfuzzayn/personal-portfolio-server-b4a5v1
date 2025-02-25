@@ -20,9 +20,14 @@ const userSchema = new Schema<TUser, UserModel>(
 
 // Middlewares
 
+// Find an User by Id
+userSchema.statics.isUserExistsById = async function (id: string) {
+    return await User.findById(id)
+}
+
 // Find an User by Email
 userSchema.statics.isUserExistsByEmail = async function (email: string) {
-    return await User.findOne({ email }).select('+password')
+    return await User.findOne({ email })
 }
 
 export const User = model<TUser, UserModel>('User', userSchema)

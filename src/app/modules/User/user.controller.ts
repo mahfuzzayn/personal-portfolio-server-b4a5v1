@@ -3,10 +3,21 @@ import sendResponse from '../../utils/sendResponse'
 import httpStatus from 'http-status'
 import { UserServices } from './user.service'
 
-const registerUser = catchAsync(async (req, res) => {
-    const { user: userData } = req.body
+const getUser = catchAsync(async (req, res) => {
+    const { userEmail } = req.params
 
-    const result = await UserServices.registerUserIntoDB(userData)
+    const result = await UserServices.getUserFromDB(userEmail)
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'User retrieved successfully',
+        data: result,
+    })
+})
+
+const registerUser = catchAsync(async (req, res) => {
+    const result = await UserServices.registerUserIntoDB(req.body)
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -17,5 +28,6 @@ const registerUser = catchAsync(async (req, res) => {
 })
 
 export const UserControllers = {
+    getUser,
     registerUser,
 }
