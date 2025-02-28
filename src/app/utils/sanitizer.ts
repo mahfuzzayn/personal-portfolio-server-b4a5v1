@@ -1,3 +1,9 @@
-export const sanitizeFilename = (title: string) => {
-    return title.replace(/[^a-zA-Z0-9-_ ]/g, '').replace(/\s+/g, '-')
+export const sanitizeFilename = (text: string) => {
+    return text
+        .normalize('NFKD')
+        .replace(/[^\w\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .toLowerCase()
 }

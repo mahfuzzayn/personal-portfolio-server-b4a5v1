@@ -28,11 +28,31 @@ const createBlogValidationSchema = z.object({
 })
 
 const updateBlogValidationSchema = z.object({
-    blog: z.object({
-        title: z.string().optional(),
-        author: z.string().optional(),
-        category: z.string().optional(),
-        content: z.string().optional(),
+    body: z.object({
+        blog: z.object({
+            title: z.string().optional(),
+            author: z.string().optional(),
+            category: z
+                .enum(
+                    [
+                        'Web Development',
+                        'Programming',
+                        'Tech News',
+                        'Personal Projects',
+                        'Career & Productivity',
+                        'AI & Machine Learning',
+                        'Design & UI/UX',
+                        'Other',
+                    ],
+                    {
+                        errorMap: () => ({
+                            message: 'Invalid category',
+                        }),
+                    },
+                )
+                .optional(),
+            content: z.string().optional(),
+        }),
     }),
 })
 

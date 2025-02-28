@@ -21,6 +21,17 @@ router.get('/:blogId', BlogControllers.getSingleBlog)
 
 router.get('/', BlogControllers.getAllBlogs)
 
+router.patch(
+    '/:blogId',
+    upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data)
+        next()
+    },
+    validateRequest(BlogValidations.updateBlogValidationSchema),
+    BlogControllers.updateBlog,
+)
+
 router.delete('/:blogId', BlogControllers.deleteBlog)
 
 export const BlogRoutes = router

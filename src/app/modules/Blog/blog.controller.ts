@@ -42,6 +42,24 @@ const getAllBlogs = catchAsync(async (req, res) => {
     })
 })
 
+const updateBlog = catchAsync(async (req, res) => {
+    const { blogId } = req.params
+    const { blog: updatedBlogData } = req.body
+
+    const result = await BlogServices.updateBlogIntoDB(
+        req.file,
+        blogId,
+        updatedBlogData,
+    )
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Blog updated successfully',
+        data: result,
+    })
+})
+
 const deleteBlog = catchAsync(async (req, res) => {
     const { blogId } = req.params
 
@@ -59,5 +77,6 @@ export const BlogControllers = {
     createBlog,
     getSingleBlog,
     getAllBlogs,
+    updateBlog,
     deleteBlog,
 }
