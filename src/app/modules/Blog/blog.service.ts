@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from '../../errors/AppError'
-import { sanitizeFilename } from '../../utils/sanitizer'
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
 import { User } from '../User/user.model'
 import { TBlog } from './blog.interface'
 import { Blog } from './blog.model'
@@ -9,12 +7,7 @@ import httpStatus from 'http-status'
 
 const createBlogIntoDB = async (file: any, payload: TBlog) => {
     if (file) {
-        const imageName = `${sanitizeFilename(payload.title)}-${payload.author}-C${sanitizeFilename(payload.category)}`
-
-        const path = file?.path
-
-        const { secure_url } = await sendImageToCloudinary(imageName, path)
-        payload.image = secure_url as string
+        payload.image = file?.path
     }
 
     const result = await Blog.create(payload)
@@ -65,17 +58,14 @@ const getAllBlogsFromDB = async (id: string) => {
 }
 
 const updateBlogIntoDB = async (
-    file: any,
     id: string,
+    file: any,
     payload: Partial<TBlog>,
 ) => {
+    console.log(file);
+
     if (file) {
-        const imageName = `${sanitizeFilename(payload.title as string)}-${payload.author}-C${sanitizeFilename(payload.category as string)}`
-
-        const path = file?.path
-
-        const { secure_url } = await sendImageToCloudinary(imageName, path)
-        payload.image = secure_url as string
+        payload.image = file?.path
     }
 
     const result = await Blog.findByIdAndUpdate(

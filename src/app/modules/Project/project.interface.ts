@@ -1,5 +1,8 @@
+import { Types } from "mongoose"
+
 export type TProject = {
     title: string
+    creator: Types.ObjectId
     images: TImage[]
     links: TLink[]
     description: string

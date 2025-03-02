@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from '../../errors/AppError'
+import { User } from '../User/user.model'
 import { TProject } from './project.interface'
 import { Project } from './project.model'
 import httpStatus from 'http-status'
@@ -31,7 +32,7 @@ const createProjectIntoDB = async (files: any[], payload: TProject) => {
 }
 
 const getSingleProjectFromDB = async (id: string) => {
-    const result = await Project.findById(id)
+    const result = await Project.findById(id).populate('creator')
 
     if (!result) {
         throw new AppError(
@@ -43,8 +44,23 @@ const getSingleProjectFromDB = async (id: string) => {
     return result
 }
 
-const getAllProjectFromDB = async () => {
-    const result = await Project.find()
+const getAllProjectFromDB = async (id: string) => {
+    if (id) {
+        const isUserExists = await User.isUserExistsById(id)
+
+        if (!isUserExists) {
+            throw new AppError(
+                httpStatus.NOT_FOUND,
+                'No creator found by the provided id',
+            )
+        }
+
+        const result = await Project.find({ creator: id }).populate('creator')
+
+        return result
+    }
+
+    const result = await Project.find().populate('creator')
 
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, 'No projects were found')

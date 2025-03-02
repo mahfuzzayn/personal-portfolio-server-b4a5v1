@@ -28,6 +28,11 @@ const projectSchema = new Schema<TProject>({
         type: String,
         required: true,
     },
+    creator: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     images: [imageSchema],
     links: [linkSchema],
     description: {

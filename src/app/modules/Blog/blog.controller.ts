@@ -47,8 +47,8 @@ const updateBlog = catchAsync(async (req, res) => {
     const { blog: updatedBlogData } = req.body
 
     const result = await BlogServices.updateBlogIntoDB(
-        req.file,
         blogId,
+        req.file,
         updatedBlogData,
     )
 
