@@ -23,22 +23,27 @@ const linkSchema = new Schema<TLink>({
     },
 })
 
-const projectSchema = new Schema<TProject>({
-    title: {
-        type: String,
-        required: true,
+const projectSchema = new Schema<TProject>(
+    {
+        title: {
+            type: String,
+            required: true,
+        },
+        creator: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        images: [imageSchema],
+        links: [linkSchema],
+        description: {
+            type: String,
+            required: true,
+        },
     },
-    creator: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+    {
+        timestamps: true,
     },
-    images: [imageSchema],
-    links: [linkSchema],
-    description: {
-        type: String,
-        required: true,
-    },
-})
+)
 
 export const Project = model<TProject>('Project', projectSchema)
