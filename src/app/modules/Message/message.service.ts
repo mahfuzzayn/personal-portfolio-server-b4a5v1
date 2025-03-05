@@ -1,3 +1,4 @@
+import QueryBuilder from '../../builder/QueryBuilder'
 import AppError from '../../errors/AppError'
 import { TMessage } from './message.interface'
 import { Message } from './message.model'
@@ -23,14 +24,20 @@ const getSingleMessageFromDB = async (id: string) => {
     return result
 }
 
-const getAllMessagesFromDB = async () => {
-    const result = await Message.find()
+const getAllMessagesFromDB = async (query: Record<string, unknown>) => {
+    const messagesQuery = new QueryBuilder(Message.find(), query)
+        .sort()
+        .paginate()
+        .fields()
+
+    const result = await messagesQuery.modelQuery
+    const meta = await messagesQuery.countTotal()
 
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, 'Failed to get messages')
     }
 
-    return result
+    return { meta, result }
 }
 
 export const MessageServices = {

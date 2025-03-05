@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import QueryBuilder from '../../builder/QueryBuilder'
 import AppError from '../../errors/AppError'
 import { User } from '../User/user.model'
 import { TProject } from './project.interface'
@@ -44,7 +45,10 @@ const getSingleProjectFromDB = async (id: string) => {
     return result
 }
 
-const getAllProjectFromDB = async (id: string) => {
+const getAllProjectFromDB = async (
+    id: string,
+    query: Record<string, unknown>,
+) => {
     if (id) {
         const isUserExists = await User.isUserExistsById(id)
 
@@ -55,18 +59,46 @@ const getAllProjectFromDB = async (id: string) => {
             )
         }
 
-        const result = await Project.find({ creator: id }).populate('creator')
+        const projectsQuery = new QueryBuilder(
+            Project.find({ creator: id }).populate('creator'),
+            query,
+        )
+            .sort()
+            .paginate()
+            .fields()
 
-        return result
+        const result = await projectsQuery.modelQuery
+        const meta = await projectsQuery.countTotal()
+
+        if (!result) {
+            throw new AppError(httpStatus.NOT_FOUND, 'No projects were found')
+        }
+
+        return {
+            meta,
+            result,
+        }
     }
 
-    const result = await Project.find().populate('creator')
+    const projectsQuery = new QueryBuilder(
+        Project.find().populate('creator'),
+        query,
+    )
+        .sort()
+        .paginate()
+        .fields()
+
+    const result = await projectsQuery.modelQuery
+    const meta = await projectsQuery.countTotal()
 
     if (!result) {
         throw new AppError(httpStatus.NOT_FOUND, 'No projects were found')
     }
 
-    return result
+    return {
+        meta,
+        result,
+    }
 }
 
 const updateProjectFromDB = async (

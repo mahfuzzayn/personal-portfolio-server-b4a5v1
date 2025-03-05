@@ -32,13 +32,14 @@ const getSingleMessage = catchAsync(async (req, res) => {
 })
 
 const getAllMessages = catchAsync(async (req, res) => {
-    const result = await MessageServices.getAllMessagesFromDB()
+    const result = await MessageServices.getAllMessagesFromDB(req.query)
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: 'Messages retrieved successfully',
-        data: result,
+        meta: result.meta,
+        data: result.result,
     })
 })
 

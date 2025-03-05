@@ -32,13 +32,17 @@ const getSingleBlog = catchAsync(async (req, res) => {
 const getAllBlogs = catchAsync(async (req, res) => {
     const { authorId } = req.query
 
-    const result = await BlogServices.getAllBlogsFromDB(authorId as string)
+    const result = await BlogServices.getAllBlogsFromDB(
+        authorId as string,
+        req.query,
+    )
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: 'Blogs retrieved successfully',
-        data: result,
+        meta: result.meta,
+        data: result.result,
     })
 })
 

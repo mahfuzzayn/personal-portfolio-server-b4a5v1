@@ -36,13 +36,17 @@ const getSingleProject = catchAsync(async (req, res) => {
 const getAllProjects = catchAsync(async (req, res) => {
     const { creatorId } = req.query
 
-    const result = await ProjectServices.getAllProjectFromDB(creatorId as string)
+    const result = await ProjectServices.getAllProjectFromDB(
+        creatorId as string,
+        req.query,
+    )
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
         message: 'Projects retrieved successfully',
-        data: result,
+        meta: result.meta,
+        data: result.result,
     })
 })
 

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import QueryBuilder from '../../builder/QueryBuilder'
 import AppError from '../../errors/AppError'
 import { User } from '../User/user.model'
 import { TBlog } from './blog.interface'
@@ -32,7 +33,10 @@ const getSingleBlogFromDB = async (id: string) => {
     return result
 }
 
-const getAllBlogsFromDB = async (id: string) => {
+const getAllBlogsFromDB = async (
+    id: string,
+    query: Record<string, unknown>,
+) => {
     if (id) {
         const isUserExists = await User.isUserExistsById(id)
 
@@ -43,18 +47,32 @@ const getAllBlogsFromDB = async (id: string) => {
             )
         }
 
-        const result = await Blog.find({ author: id }).populate('author')
+        const projectsQuery = new QueryBuilder(
+            Blog.find({ author: id }).populate('author'),
+            query,
+        )
+            .sort()
+            .paginate()
+            .fields()
 
-        return result
+        const result = await projectsQuery.modelQuery
+        const meta = await projectsQuery.countTotal()
+
+        return { meta, result }
     }
 
-    const result = await Blog.find()
+    const projectsQuery = new QueryBuilder(
+        Blog.find().populate('author'),
+        query,
+    )
+        .sort()
+        .paginate()
+        .fields()
 
-    if (!result) {
-        throw new AppError(httpStatus.NOT_FOUND, 'No blogs were found')
-    }
+    const result = await projectsQuery.modelQuery
+    const meta = await projectsQuery.countTotal()
 
-    return result
+    return { meta, result }
 }
 
 const updateBlogIntoDB = async (
@@ -62,7 +80,7 @@ const updateBlogIntoDB = async (
     file: any,
     payload: Partial<TBlog>,
 ) => {
-    console.log(file);
+    console.log(file)
 
     if (file) {
         payload.image = file?.path
