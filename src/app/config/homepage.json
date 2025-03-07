@@ -1,0 +1,57 @@
+{
+    "message": "Welcome to PerpoDia API",
+    "description": "This API allows you to manage projects, blogs, messages & users",
+    "endpoints": [
+        {
+            "path": "/api/v1/projects",
+            "methods": {
+                "GET": "Retrieve all projects",
+                "POST": "Create a new project"
+            }
+        },
+        {
+            "path": "/api/v1/projects/:projectId",
+            "methods": {
+                "GET": "Retrieve a specific project by ID",
+                "PUT": "Update a project by ID & changes",
+                "DELETE": "Delete a project by ID"
+            }
+        },
+        {
+            "path": "/api/v1/blogs",
+            "methods": {
+                "GET": "Retrieve all blogs",
+                "POST": "Create a new blog"
+            }
+        },
+        {
+            "path": "/api/v1/blogs/:blogId",
+            "methods": {
+                "GET": "Retrieve a specific blog by ID",
+                "PUT": "Update a blog by ID & changes",
+                "DELETE": "Delete a blog by ID"
+            }
+        },
+        {
+            "path": "/api/v1/messages",
+            "methods": {
+                "GET": "Retrieve all messages",
+                "POST": "Create a new message"
+            }
+        },
+        {
+            "path": "/api/v1/messages/:messageId",
+            "methods": {
+                "GET": "Retrieve a specific message by ID"
+            }
+        },
+        {
+            "path": "/api/v1/users/:userEmail",
+            "methods": {
+                "GET": "Retrieve a specific user by Email"
+            }
+        }
+    ],
+    "documentation": "For more details, visit [Github Repository](https://github.com/mahfuzzayn/perpodia-server)",
+    "devInfo": "Developed by Mahfuz Zayn"
+}
