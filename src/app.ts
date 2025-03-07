@@ -10,7 +10,7 @@ const app: Application = express()
 app.use(express.json())
 app.use(
     cors({
-        origin: ['https://perpodia.vercel.app/'],
+        origin: ['https://perpodia.vercel.app'],
         credentials: true,
     }),
 )
